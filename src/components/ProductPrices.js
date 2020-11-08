@@ -2,25 +2,40 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import qs from "qs";
 import driw from "../driw";
+import PaginationNav from "./PaginationNav";
 
 export default function ProductPrices() {
+  const tableMaxRowCount = 10;
+  const pageCount = 50 / tableMaxRowCount;
+
   const { id } = useParams();
 
+  const [page, setPage] = useState(0);
   const [productPrices, setProductPrices] = useState([]);
 
-  useEffect(() => {
+  const getProducts = (newpage) => {
     driw
-      .get(`/products/${id}/prices/collection?${qs.stringify({ size: 10 })}`)
+      .get(
+        `/products/${id}/prices/collection?${qs.stringify({
+          size: tableMaxRowCount,
+          page: newpage,
+        })}`
+      )
       .then((res) => res.data)
       .then((data) => {
         if (!data.errorCode) {
+          setPage(newpage);
           setProductPrices(data);
         }
       })
       .catch((err) => {
         throw err;
       });
-  }, [id]);
+  };
+
+  useEffect(() => {
+    getProducts(0);
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="mt-12">
@@ -49,6 +64,15 @@ export default function ProductPrices() {
               ))}
             </tbody>
           </table>
+        </div>
+        <div className="float-right shadow-sm m-2">
+          <PaginationNav
+            page={page}
+            onPageChange={(newpage) => {
+              getProducts(newpage);
+            }}
+            pageCount={pageCount}
+          />
         </div>
       </div>
     </div>
