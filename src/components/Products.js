@@ -20,7 +20,7 @@ export default function Products() {
   }, []);
 
   return (
-    <div className="mt-16">
+    <div className="mt-12">
       <div className="rounded-lg shadow overflow-hidden max-w-2xl mx-auto">
         <div className="border-b">
           <table className="w-full bg-white">
@@ -48,7 +48,7 @@ export default function Products() {
                   <td className="pl-6 pr-2 py-2">
                     <Link
                       className="text-sm text-blue-700 px-2 py-1 font-medium"
-                      to="/"
+                      to={`/product-prices/${p.id}`}
                     >
                       view
                     </Link>
