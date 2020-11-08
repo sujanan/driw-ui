@@ -1,9 +1,13 @@
 import qs from "qs";
 import { useEffect, useState } from "react";
 import driw from "../driw";
+import { useDispatch } from "react-redux";
+import { setError } from "../actions";
 
 export default function Calculator() {
   const cartonsMax = 50;
+
+  const dispatch = useDispatch();
 
   const [products, setProducts] = useState({});
   const [selectedProduct, setSelectedProduct] = useState({});
@@ -14,7 +18,12 @@ export default function Calculator() {
   useEffect(() => {
     driw
       .get("/products")
-      .then((res) => res.data)
+      .then((res) => {
+        if (res.status !== 200) {
+          dispatch(setError(res.data.errorName));
+        }
+        return res.data;
+      })
       .then((data) => {
         const dataObj = {};
         data.forEach((d) => {
@@ -23,7 +32,11 @@ export default function Calculator() {
         setProducts(dataObj);
       })
       .catch((err) => {
-        throw err;
+        if (!err.response) {
+          dispatch(setError("Network error"));
+        } else {
+          dispatch(setError(err.response.data.errorName));
+        }
       });
   }, []);
 
@@ -36,12 +49,21 @@ export default function Calculator() {
           quantity: c * selectedProduct.cartonSize + u,
         })}`
       )
-      .then((res) => res.data)
+      .then((res) => {
+        if (res.status !== 200) {
+          dispatch(setError(res.data.errorName));
+        }
+        return res.data;
+      })
       .then((data) => {
         setPrice(data.amount);
       })
       .catch((err) => {
-        throw err;
+        if (!err.response) {
+          dispatch(setError("Network error"));
+        } else {
+          dispatch(setError(err.response.data.errorName));
+        }
       });
   };
 

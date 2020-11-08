@@ -1,23 +1,34 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import driw from "../driw";
+import { useDispatch } from "react-redux";
+import { setError } from "../actions";
 
 export default function Products() {
   const [products, setProducts] = useState([]);
 
+  const dispatch = useDispatch();
+
   useEffect(() => {
     driw
       .get("/products")
-      .then((res) => res.data)
-      .then((data) => {
-        if (!data.errorCode) {
-          setProducts(data);
+      .then((res) => {
+        if (res.status !== 200) {
+          dispatch(setError(res.data.errorName));
         }
+        return res.data;
+      })
+      .then((data) => {
+        setProducts(data);
       })
       .catch((err) => {
-        throw err;
+        if (!err.response) {
+          dispatch(setError("Network error"));
+        } else {
+          dispatch(setError(err.response.data.errorName));
+        }
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="mt-12">

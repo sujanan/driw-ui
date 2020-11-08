@@ -1,12 +1,31 @@
 import { Link, useLocation, Route } from "react-router-dom";
 import { Products, ProductPrices } from "../components";
 import Calculator from "../components/Calculator";
+import { useSelector, useDispatch } from "react-redux";
+import { setError } from "../actions";
 
 export default function Home() {
   const { pathname } = useLocation();
 
+  const dispatch = useDispatch();
+
+  const error = useSelector((state) => state.error);
+
+  if (error) {
+    setTimeout(() => {
+      dispatch(setError(""));
+    }, 5000);
+  }
+
   return (
     <div className="h-screen bg-gray-100">
+      <div
+        className={`bg-red-500 text-xs text-center text-red-100 ${
+          error ? "" : "hidden"
+        }`}
+      >
+        {error}
+      </div>
       <header className="flex justify-center p-6 bg-white shadow">
         <nav>
           <Link

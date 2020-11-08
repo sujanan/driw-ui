@@ -3,12 +3,16 @@ import { useParams } from "react-router-dom";
 import qs from "qs";
 import driw from "../driw";
 import PaginationNav from "./PaginationNav";
+import { useDispatch } from "react-redux";
+import { setError } from "../actions";
 
 export default function ProductPrices() {
   const tableMaxRowCount = 10;
   const pageCount = 50 / tableMaxRowCount;
 
   const { id } = useParams();
+
+  const dispatch = useDispatch();
 
   const [page, setPage] = useState(0);
   const [productPrices, setProductPrices] = useState([]);
@@ -21,15 +25,22 @@ export default function ProductPrices() {
           page: newpage,
         })}`
       )
-      .then((res) => res.data)
-      .then((data) => {
-        if (!data.errorCode) {
-          setPage(newpage);
-          setProductPrices(data);
+      .then((res) => {
+        if (res.status !== 200) {
+          dispatch(setError(res.data.errorName));
         }
+        return res.data;
+      })
+      .then((data) => {
+        setPage(newpage);
+        setProductPrices(data);
       })
       .catch((err) => {
-        throw err;
+        if (!err.response) {
+          dispatch(setError("Network error"));
+        } else {
+          dispatch(setError(err.response.data.errorName));
+        }
       });
   };
 
