@@ -1,5 +1,6 @@
 import { Link, useLocation, Route } from "react-router-dom";
 import { Products, ProductPrices } from "../components";
+import Calculator from "../components/Calculator";
 
 export default function Home() {
   const { pathname } = useLocation();
@@ -34,6 +35,9 @@ export default function Home() {
         </Route>
         <Route exact path="/product-prices/:id">
           <ProductPrices />
+        </Route>
+        <Route exact path="/calculator">
+          <Calculator />
         </Route>
       </main>
     </div>

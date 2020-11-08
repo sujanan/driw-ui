@@ -47,10 +47,10 @@ export default function Products() {
                   </td>
                   <td className="pl-6 pr-2 py-2">
                     <Link
-                      className="text-sm text-blue-700 px-2 py-1 font-medium"
+                      className="text-sm text-blue-700 px-2 py-1 font-medium hover:text-blue-900"
                       to={`/product-prices/${p.id}`}
                     >
-                      view
+                      Show prices
                     </Link>
                   </td>
                 </tr>
