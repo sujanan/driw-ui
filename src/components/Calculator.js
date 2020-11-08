@@ -38,7 +38,7 @@ export default function Calculator() {
           dispatch(setError(err.response.data.errorName));
         }
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getPrice = () => {
     const c = cartons ? cartons : 0;
@@ -80,7 +80,8 @@ export default function Calculator() {
 
   const handleCartonsChange = (e) => {
     const cartonSize = selectedProduct.cartonSize;
-    const currentCartonsMax = cartonsMax - (units ? Math.ceil(units / cartonSize)  : 0);
+    const currentCartonsMax =
+      cartonsMax - (units ? Math.ceil(units / cartonSize) : 0);
     const c = Math.max(Math.min(e.target.value, currentCartonsMax), 0);
     setCartons(c === 0 ? "" : c);
   };
