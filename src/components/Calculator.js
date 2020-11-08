@@ -79,7 +79,9 @@ export default function Calculator() {
   };
 
   const handleCartonsChange = (e) => {
-    const c = Math.max(Math.min(e.target.value, cartonsMax), 0);
+    const cartonSize = selectedProduct.cartonSize;
+    const currentCartonsMax = cartonsMax - (units ? Math.ceil(units / cartonSize)  : 0);
+    const c = Math.max(Math.min(e.target.value, currentCartonsMax), 0);
     setCartons(c === 0 ? "" : c);
   };
 
